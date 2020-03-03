@@ -12,10 +12,15 @@ my_markers <- function(mat) {
                 x <- sort(x)
                 jumps <- diff(x);
                 br_pt <- which(jumps == max(jumps))
+		 if (length(br_pt) > 1) {
+                        br_pt <- Inf
+                }     
                 return(c(x[br_pt], max(jumps)));
         }
         thresh <- apply(mat, 1, my_split_max_gap);
         on_off <- t(sapply(1:ncol(thresh), function(i) {mat[i,] > thresh[1,i]}))
+	on_off[is.na(on_off)] <- FALSE;
+
 	rownames(on_off) <- rownames(mat);
 	colnames(thresh) <- rownames(mat);
         return(list(score=thresh[2,], on_off=on_off));
