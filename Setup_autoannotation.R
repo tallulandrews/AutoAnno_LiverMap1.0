@@ -1,9 +1,9 @@
 require(SingleCellExperiment)
 require(scmap)
 
-map1_ref <- readRDS("/home/wizard/Tallulah/AutoAnnotation/scmap_reference.rds")
+map1_ref <- readRDS("~/Tallulah/AutoAnnotation/scmap_reference.rds")
 
-map1_markers <- read.table("/home/wizard/Tallulah/AutoAnnotation/my_marker_genes.txt", header=T, stringsAsFactors=FALSE)
+map1_markers <- read.table("~/Tallulah/AutoAnnotation/scripts/AutoAnno_LiverMap1.0/my_marker_genes.txt", header=T, stringsAsFactors=FALSE)
 
 require(CellTypeProfiles)
 my_markers <- function(mat) {
@@ -46,7 +46,8 @@ run_scmap_seurat <- function(myseur, scmap_ref=map1_ref, return_sce=FALSE) {
 	mysce$scmap_score <-  scmap_annotation$scmap_cluster_siml
 
 
-	myseur@meta.data$scmap_cluster_anno <- data.frame(id=mysce$scmap_id, similarity=mysce$scmap_score);
+	myseur@meta.data$scmap_cluster_anno_id <- id=mysce$scmap_id
+	myseur@meta.data$scmap_cluster_anno_score <- mysce$scmap_score;
 
 	# scmap_cell
 	scmap_cell_res <- scmapCell(mysce, index_list=list(lm1=metadata(map1_ref)$scmap_cell_index));
