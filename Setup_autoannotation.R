@@ -7,6 +7,7 @@ map1_markers <- read.table("~/Tallulah/AutoAnnotation/scripts/AutoAnno_LiverMap1
 
 require(CellTypeProfiles)
 my_markers <- function(mat) {
+	mat <- mat[rowSums(mat>0) >= 1,]
         on_off <- matrix(0, ncol=ncol(mat), nrow=nrow(mat));
         my_split_max_gap <- function(x) {
                 x <- sort(x)
@@ -20,7 +21,6 @@ my_markers <- function(mat) {
         thresh <- apply(mat, 1, my_split_max_gap);
         on_off <- t(sapply(1:ncol(thresh), function(i) {mat[i,] > thresh[1,i]}))
 	on_off[is.na(on_off)] <- FALSE;
-
 	rownames(on_off) <- rownames(mat);
 	colnames(thresh) <- rownames(mat);
         return(list(score=thresh[2,], on_off=on_off));
@@ -84,6 +84,8 @@ cell_anno_to_cluster_anno <- function(cellids, clusterids) {
 
 
 Use_markers_for_anno <- function(mat, clusters, ref_markers=map1_markers) {
+	# exclude mitochondrial genes
+	mat <- mat[!grepl("^MT-", rownames(mat)),]
 	# get average expression by cluster
 	cluster_means <- my_row_mean_aggregate(mat, clusters);
 	# get % detect by cluster
