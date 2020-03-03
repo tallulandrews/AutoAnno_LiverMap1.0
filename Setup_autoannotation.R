@@ -13,9 +13,9 @@ my_markers <- function(mat) {
                 x <- sort(x)
                 jumps <- diff(x);
                 br_pt <- which(jumps == max(jumps))
-		if (length(br_pt) > 1) {
-			br_pt <- Inf
-		}
+		 if (length(br_pt) > 1) {
+                        br_pt <- Inf
+                }     
                 return(c(x[br_pt], max(jumps)));
         }
         thresh <- apply(mat, 1, my_split_max_gap);
@@ -29,7 +29,7 @@ my_markers <- function(mat) {
 
 run_scmap_seurat <- function(myseur, scmap_ref=map1_ref, return_sce=FALSE) {
 	myseur@assays$RNA@counts <- myseur@assays$RNA@counts[match(rownames(myseur@assays$RNA@data), rownames(myseur@assays$RNA@counts)),]
-	mysce <- SingleCellExperiment(assays=list(counts=myseur@assays$RNA@counts, logcounts=myseur@assays$RNA@data), colData=myseur@meta.data)
+	mysce <- SingleCellExperiment(assays=list(counts=myseur@assays$RNA@counts, logcounts=as.matrix(myseur@assays$RNA@data)), colData=myseur@meta.data)
 
 
 #	mysce <- as.SingleCellExperiment(myseur)
